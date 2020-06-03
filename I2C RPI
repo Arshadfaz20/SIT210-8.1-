@@ -1,0 +1,40 @@
+import RPi
+import RPi.GPIO as GPIO
+from smbus import SMBus
+from tkinter import *
+import tkinter.font as tkinterfont
+
+win = Tk()
+win.title("I2C RPi to Arduino UNO")
+myFont= tkinterfont.Font(family='Calibri',size=12,weight="bold")
+
+addr=0x8
+bus=SMBus(1)
+
+def switchon():
+    bus.write_byte(addr,0x1)
+
+def switchoff():
+    bus.write_byte(addr,0x0)
+
+def close():
+    RPi.GPIO.cleanup()
+    win.destroy()
+
+GUILabel = Label(win, text = 'The LED toggler using I2C')
+GUILabel.grid(row = 0, column = 1)
+
+onButton=Button(win, text="ON LED", font = myFont, command= switchon,
+bg='green', height=1, width=8)
+onButton.grid(row = 1, column = 1)
+
+offButton=Button(win, text="OFF LED", font = myFont, command=
+switchoff , bg='red', height=1, width=8)
+offButton.grid(row = 2, column = 1)
+
+exitButton = Button(win, text = 'EXIT', font = myFont, command =
+close, bg = 'orange', height = 1, width = 5)
+exitButton.grid(row = 3, column =1 )
+
+win.protocol("WM_DELETE_WINDOW", close)
+win.mainloop()
